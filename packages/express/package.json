@@ -1,7 +1,7 @@
 {
-  "name": "@bull-board/express",
+  "name": "@lysosome/bull-board-express",
   "version": "5.11.0",
-  "description": "A Express.js server adapter for Bull-Board dashboard.",
+  "description": "A Express.js server adapter for Bull-Board dashboard. Customized for Rivet.",
   "keywords": [
     "bull",
     "bullmq",
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/felixmosh/bull-board.git",
+    "url": "git+https://github.com/Lysosome/bull-board",
     "directory": "packages/express"
   },
   "license": "MIT",
@@ -28,7 +28,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@bull-board/api": "5.11.0",
+    "@lysosome/bull-board-api": "5.11.0",
     "@bull-board/ui": "5.11.0",
     "ejs": "^3.1.7",
     "express": "^4.17.3"

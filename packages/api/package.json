@@ -1,7 +1,7 @@
 {
-  "name": "@bull-board/api",
+  "name": "@lysosome/bull-board-api",
   "version": "5.11.0",
-  "description": "A Dashboard server API built on top of bull or bullmq.",
+  "description": "A Dashboard server API built on top of bull or bullmq. Customized for Rivet.",
   "keywords": [
     "bull",
     "bullmq",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/felixmosh/bull-board.git",
+    "url": "git+https://github.com/Lysosome/bull-board",
     "directory": "packages/api"
   },
   "license": "MIT",

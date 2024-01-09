@@ -23,7 +23,7 @@ export function createBullBoard({
     .setViewsPath(path.join(uiBasePath, 'dist'))
     .setStaticPath('/static', path.join(uiBasePath, 'dist/static'))
     .setUIConfig({
-      boardTitle: 'Bull Dashboard',
+      boardTitle: 'Rivet Dashboard',
       favIcon: {
         default: 'static/images/logo.svg',
         alternative: 'static/favicon-32x32.png',

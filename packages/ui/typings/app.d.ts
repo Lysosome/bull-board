@@ -4,9 +4,9 @@ import {
   JobCleanStatus,
   JobRetryStatus,
   Status,
-} from '@bull-board/api/typings/app';
+} from '@lysosome/bull-board-api/dist/typings/app';
 
-export { Status } from '@bull-board/api/typings/app';
+export { Status } from '@lysosome/bull-board-api/dist/typings/app';
 
 export type SelectedStatuses = Record<AppQueue['name'], Status>;
 

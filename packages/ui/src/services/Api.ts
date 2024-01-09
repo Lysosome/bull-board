@@ -4,8 +4,8 @@ import {
   JobRetryStatus,
   RedisStats,
   Status,
-} from '@bull-board/api/typings/app';
-import { GetJobResponse, GetQueuesResponse } from '@bull-board/api/typings/responses';
+} from '@lysosome/bull-board-api/dist/typings/app';
+import { GetJobResponse, GetQueuesResponse } from '@lysosome/bull-board-api/dist/typings/responses';
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 

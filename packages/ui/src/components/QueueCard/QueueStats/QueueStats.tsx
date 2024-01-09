@@ -1,4 +1,4 @@
-import { AppQueue } from '@bull-board/api/typings/app';
+import { AppQueue } from '@lysosome/bull-board-api/dist/typings/app';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { toCamelCase } from '../../../utils/toCamelCase';

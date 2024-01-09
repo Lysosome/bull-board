@@ -1,5 +1,5 @@
-import { JobCleanStatus, JobRetryStatus } from '@bull-board/api/typings/app';
-import { GetQueuesResponse } from '@bull-board/api/typings/responses';
+import { JobCleanStatus, JobRetryStatus } from '@lysosome/bull-board-api/dist/typings/app';
+import { GetQueuesResponse } from '@lysosome/bull-board-api/dist/typings/responses';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';

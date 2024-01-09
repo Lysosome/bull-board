@@ -1,6 +1,6 @@
-const { createBullBoard } = require('@bull-board/api');
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
-const { KoaAdapter } = require('@bull-board/koa');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
+const { KoaAdapter } = require('@lysosome/bull-board-koa');
 const { Queue: QueueMQ, Worker } = require('bullmq');
 const Koa = require('koa');
 const Router = require('koa-router');

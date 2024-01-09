@@ -1,11 +1,27 @@
 # <img alt="@bull-board" src="https://raw.githubusercontent.com/felixmosh/bull-board/master/packages/ui/src/static/images/logo.svg" width="35px" /> @bull-board
 
+Running and testing locally:
+
+1. `npm run start:dev` within root level dir. Make sure you've run `yarn install` on all packages first. Also make sure that ports 3000 and 9000 are open. (Example backend runs on 3000, UI runs on 9000 at localhos:9000/ui).
+2. Once it's up and running, add jobs to the example queues with `curl http://localhost:3000/add?title=Example`
+
+Publishing to NPM:
+
+The correct order (dependency-wise) for the 3 packages is: first api, then ui, and finally express.
+
+1. Save all changes and run `npm run build` in the package root, ensuring that it builds without errors.
+2. Upgrade the version number in the package's `package.json`, also ensuring that its dependencies on other libraries (such as UI's dependency on API package) are also updated with the new number
+3. From CLI, in the package root dir, login to NPM with `npm login`, then run `npm publish`
+4. Make sure that any applications (i.e. Rivet monorepo) using these packages also update and run `yarn install` to get the changes.
+
+---
+
 Bull Dashboard is a UI built on top of [Bull](https://github.com/OptimalBits/bull) or [BullMQ](https://github.com/taskforcesh/bullmq) to help you visualize your queues and their jobs.
 With this library you get a beautiful UI for visualizing what's happening with each job in your queues, their status and some actions that will enable you to get the job done.
 
 <p align="center">
   <a href="https://www.npmjs.com/org/bull-board">
-    <img alt="npm downloads" src="https://img.shields.io/npm/dw/@bull-board/api">
+    <img alt="npm downloads" src="https://img.shields.io/npm/dw/@lysosome/bull-board-api">
   </a>
   <a href="https://github.com/felixmosh/bull-board/blob/master/LICENSE">
     <img alt="licence" src="https://img.shields.io/github/license/felixmosh/bull-board">
@@ -18,16 +34,16 @@ With this library you get a beautiful UI for visualizing what's happening with e
 
 ## Packages
 
-| Name                                                                     | Version                                                           |
-|--------------------------------------------------------------------------|-------------------------------------------------------------------|
-| [@bull-board/api](https://www.npmjs.com/package/@bull-board/api)         | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/api)     |
-| [@bull-board/ui](https://www.npmjs.com/package/@bull-board/ui)           | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/ui)      |
-| [@bull-board/express](https://www.npmjs.com/package/@bull-board/express) | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/express) |
-| [@bull-board/fastify](https://www.npmjs.com/package/@bull-board/fastify) | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/fastify) |
-| [@bull-board/koa](https://www.npmjs.com/package/@bull-board/koa)         | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/koa)     |
-| [@bull-board/hapi](https://www.npmjs.com/package/@bull-board/hapi)       | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/hapi)    |
-| [@bull-board/nestjs](https://www.npmjs.com/package/@bull-board/nestjs)   | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/nestjs)  |
-| [@bull-board/hono](https://www.npmjs.com/package/@bull-board/hono)       | ![npm (scoped)](https://img.shields.io/npm/v/@bull-board/hono)    |
+| Name                                                                                       | Version                                                                    |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| [@lysosome/bull-board-api](https://www.npmjs.com/package/@lysosome/bull-board-api)         | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-api)     |
+| [@lysosome/bull-board-ui](https://www.npmjs.com/package/@lysosome/bull-board-ui)           | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-ui)      |
+| [@lysosome/bull-board-express](https://www.npmjs.com/package/@lysosome/bull-board-express) | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-express) |
+| [@lysosome/bull-board-fastify](https://www.npmjs.com/package/@lysosome/bull-board-fastify) | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-fastify) |
+| [@lysosome/bull-board-koa](https://www.npmjs.com/package/@lysosome/bull-board-koa)         | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-koa)     |
+| [@lysosome/bull-board-hapi](https://www.npmjs.com/package/@lysosome/bull-board-hapi)       | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-hapi)    |
+| [@lysosome/bull-board-nestjs](https://www.npmjs.com/package/@lysosome/bull-board-nestjs)   | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-nestjs)  |
+| [@lysosome/bull-board-hono](https://www.npmjs.com/package/@lysosome/bull-board-hono)       | ![npm (scoped)](https://img.shields.io/npm/v/@lysosome/bull-board-hono)    |
 
 ## Notes
 
@@ -45,20 +61,21 @@ If you want to learn more about queues ([Bull](https://github.com/OptimalBits/bu
 To add it to your project start by installing a server framework specific adapter to your dependencies list:
 
 ```sh
-yarn add @bull-board/express
+yarn add @lysosome/bull-board-express
 # or
-yarn add @bull-board/fastify
+yarn add @lysosome/bull-board-fastify
 # or
-yarn add @bull-board/hapi
+yarn add @lysosome/bull-board-hapi
 # or
-yarn add @bull-board/koa
+yarn add @lysosome/bull-board-koa
 # or
-yarn add @bull-board/nestjs
+yarn add @lysosome/bull-board-nestjs
 # or
-yarn add @bull-board/hono
+yarn add @lysosome/bull-board-hono
 ```
 
 ### NestJS specific setup
+
 @bull-board provides a module for easy integration with NestJS, for reference on how to use the module refer to the [NestJS Module](https://github.com/felixmosh/bull-board/tree/master/packages/nestjs) package
 
 ## Hello World
@@ -67,10 +84,10 @@ yarn add @bull-board/hono
 const express = require('express');
 const Queue = require('bull');
 const QueueMQ = require('bullmq');
-const { createBullBoard } = require('@bull-board/api');
-const { BullAdapter } = require('@bull-board/api/bullAdapter');
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
-const { ExpressAdapter } = require('@bull-board/express');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullAdapter } = require('@lysosome/bull-board-api/bullAdapter');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
+const { ExpressAdapter } = require('@lysosome/bull-board-express');
 
 const someQueue = new Queue('someQueueName', {
   redis: { port: 6379, host: '127.0.0.1', password: 'foobared' },
@@ -101,8 +118,8 @@ app.listen(3000, () => {
 
 That's it! Now you can access the `/admin/queues` route, and you will be able to monitor everything that is happening in your queues 😁
 
-
 For more advanced usages check the `examples` folder, currently it contains:
+
 1. [Basic authentication example](https://github.com/felixmosh/bull-board/tree/master/examples/with-express-auth)
 2. [Multiple instance of the board](https://github.com/felixmosh/bull-board/tree/master/examples/with-multiple-instances)
 3. [With Fastify server](https://github.com/felixmosh/bull-board/tree/master/examples/with-fastify)
@@ -113,19 +130,20 @@ For more advanced usages check the `examples` folder, currently it contains:
 8. [With Hono server](https://github.com/felixmosh/bull-board/tree/master/examples/with-hono) (Thanks to @nihalgonsalves)
 
 ### Board options
+
 1. `uiConfig.boardTitle` (default: `Bull Dashboard`)
-The Board and page titles
+   The Board and page titles
 2. `uiConfig.boardLogo` (default: `empty`) `{ path: string; width?: number | string; height?: number | string }`
-An object that allows you to specify a different logo
+   An object that allows you to specify a different logo
 3. `uiConfig.miscLinks` (default: `empty`) `Array< { text: string; url: string }>`
-An array of misc link that you can add to the dashboard, such as logout link.
+   An array of misc link that you can add to the dashboard, such as logout link.
 4. uiConfig.favIcon (default: `{ default: 'static/images/logo.svg', alternative: 'static/favicon-32x32.png', }`) `{ default: string; alternative: 'string' }`
-An object that allows you to specify the default and alternative favicons.
+   An object that allows you to specify the default and alternative favicons.
 
 ```js
 const QueueMQ = require('bullmq');
-const {createBullBoard} = require('@bull-board/api');
-const {BullMQAdapter} = require('@bull-board/api/bullMQAdapter');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
 
 const queueMQ = new QueueMQ();
 
@@ -140,7 +158,7 @@ createBullBoard({
         width: '100px',
         height: 200,
       },
-      miscLinks: [{text: 'Logout', url: '/logout'}],
+      miscLinks: [{ text: 'Logout', url: '/logout' }],
       favIcon: {
         default: 'static/images/logo.svg',
         alternative: 'static/favicon-32x32.png',
@@ -151,45 +169,46 @@ createBullBoard({
 ```
 
 ### Queue options
+
 1. `readOnlyMode` (default: `false`)
-Makes the UI as read only, hides all queue & job related actions
+   Makes the UI as read only, hides all queue & job related actions
 
 ```js
-const Queue = require('bull')
-const QueueMQ = require('bullmq')
-const { createBullBoard } = require('@bull-board/api')
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
-const { BullAdapter } = require('@bull-board/api/bullAdapter')
+const Queue = require('bull');
+const QueueMQ = require('bullmq');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
+const { BullAdapter } = require('@lysosome/bull-board-api/bullAdapter');
 
-const someQueue = new Queue()
-const queueMQ = new QueueMQ()
+const someQueue = new Queue();
+const queueMQ = new QueueMQ();
 
 createBullBoard({
   queues: [
     new BullAdapter(someQueue, { readOnlyMode: true }), // only this queue will be in read only mode
     new BullMQAdapter(queueMQ, { readOnlyMode: true }),
-  ]
-})
+  ],
+});
 ```
 
 2. `allowRetries` (default: `true`)
-When set to `false` the UI removes the job retry buttons for a queue. This option will be ignored if `readOnlyMode` is `true`.
+   When set to `false` the UI removes the job retry buttons for a queue. This option will be ignored if `readOnlyMode` is `true`.
 
 ```js
-const QueueMQ = require('bullmq')
-const { createBullBoard } = require('@bull-board/api')
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter')
-const { BullAdapter } = require('@bull-board/api/bullAdapter')
+const QueueMQ = require('bullmq');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
+const { BullAdapter } = require('@lysosome/bull-board-api/bullAdapter');
 
-const someQueue = new Queue()
-const queueMQ = new QueueMQ()
+const someQueue = new Queue();
+const queueMQ = new QueueMQ();
 
 createBullBoard({
   queues: [
     new BullAdapter(someQueue, { allowRetries: false }), // No retry buttons
     new BullMQAdapter(queueMQ, { allowRetries: true, readOnlyMode: true }), // allowRetries will be ignored in this case in lieu of readOnlyMode
-  ]
-})
+  ],
+});
 ```
 
 3. `description` (default: `empty`)
@@ -203,22 +222,22 @@ createBullBoard({
 ```js
 const QueueMQ = require('bullmq');
 const fastRedact = require('fast-redact');
-const { createBullBoard } = require('@bull-board/api');
-const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullMQAdapter } = require('@lysosome/bull-board-api/bullMQAdapter');
 
 const redact = fastRedact({
-  paths: ['headers.cookie', 'password', 'access_token']
-})
+  paths: ['headers.cookie', 'password', 'access_token'],
+});
 
-const queueMQ = new QueueMQ()
+const queueMQ = new QueueMQ();
 const queueAdapter = new BullMQAdapter(queueMQ);
 queueAdapter.setFormatter('name', (job) => `#Queue1 - ${job.name}`);
 queueAdapter.setFormatter('data', (data) => redact(data));
 queueAdapter.setFormatter('returnValue', (returnValue) => redact(returnValue));
 
 createBullBoard({
-  queues: [queueAdapter]
-})
+  queues: [queueAdapter],
+});
 ```
 
 ### Hosting router on a sub path
@@ -226,23 +245,21 @@ createBullBoard({
 If you host your express service on a different path than root (/) ie. https://<server_name>/<sub_path>/, then you can add the following code to provide the configuration to the bull-board router. In this example the sub path will be `my-base-path`.
 
 ```js
-const Queue = require('bull')
-const { createBullBoard } = require('@bull-board/api')
-const { BullAdapter } = require('@bull-board/api/bullAdapter')
-const { ExpressAdapter } = require('@bull-board/express')
+const Queue = require('bull');
+const { createBullBoard } = require('@lysosome/bull-board-api');
+const { BullAdapter } = require('@lysosome/bull-board-api/bullAdapter');
+const { ExpressAdapter } = require('@lysosome/bull-board-express');
 
 const basePath = '/my-base-path';
 
-const someQueue = new Queue('someQueueName')
+const someQueue = new Queue('someQueueName');
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath(basePath)
+serverAdapter.setBasePath(basePath);
 
 createBullBoard({
-  queues: [
-    new BullAdapter(someQueue),
-  ],
-  serverAdapter
-})
+  queues: [new BullAdapter(someQueue)],
+  serverAdapter,
+});
 
 // ... express server configuration
 

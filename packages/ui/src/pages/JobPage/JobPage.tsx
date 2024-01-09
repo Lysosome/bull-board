@@ -1,4 +1,4 @@
-import { AppQueue, JobRetryStatus } from '@bull-board/api/typings/app';
+import { AppQueue, JobRetryStatus } from '@lysosome/bull-board-api/dist/typings/app';
 import cn from 'clsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

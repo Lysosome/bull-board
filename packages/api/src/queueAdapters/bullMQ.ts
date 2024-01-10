@@ -35,6 +35,68 @@ export class BullMQAdapter extends BaseAdapter {
     return this.queue.getJobs(jobStatuses, start, end);
   }
 
+  /*
+  We often get large amounts of consecutive jobs with the same name, so this allows you to collapse
+  all consecutive jobs with the same name into a single row. We pull jobs, starting from the currentPage,
+  until we reach the end or we have reached jobsPerPage non-consecutive different names.
+  */
+  public async getCollapsedJobs(
+    statuses: JobStatus[],
+    counts: JobCounts,
+    currentPage: number,
+    jobsPerPage: number,
+    after?: number
+  ): Promise<{
+    jobs: Job[];
+    pagination: { pageCount: number; range: { start: number; end: number } };
+  }> {
+    const isLatestStatus = statuses.length > 1;
+    const total = isLatestStatus
+      ? statuses.reduce((total, status) => total + Math.min(counts[status], jobsPerPage), 0)
+      : counts[statuses[0]];
+
+    const start = after || (isLatestStatus ? 0 : (currentPage - 1) * jobsPerPage);
+    const pageCount = isLatestStatus ? 1 : Math.ceil(total / jobsPerPage); // upper limit (we don't really know)
+
+    // determine end by iterating over jobs
+    // use exponential search to find end, number of jobs starts at 1 and doubles each iteration, max 1024
+    const maxJobsPerIteration = 1024;
+    let end = start;
+    const jobs: Job[] = [];
+    let currentConsecutiveJobName = '';
+    let jobsFound = 0;
+
+    while (jobsFound < jobsPerPage && end < total) {
+      const jobsToFetch = Math.min(total - end, jobsFound + maxJobsPerIteration - jobsPerPage);
+      const fetchedJobs = await this.getJobs(statuses, end, end + jobsToFetch);
+      // Add jobsToFetch until we have reached jobsPerPage non-consecutive different names
+      let jobsAddedInBatch = 0;
+      fetchedJobs.forEach((job) => {
+        if (job.name !== currentConsecutiveJobName) {
+          // new name
+          if (jobsFound >= jobsPerPage) return; // we're done
+          jobs.push(job);
+          jobsAddedInBatch++;
+          currentConsecutiveJobName = job.name;
+          jobsFound++;
+        } else {
+          // continuation of the same name
+          jobs.push(job);
+          jobsAddedInBatch++;
+        }
+      });
+      end += jobsAddedInBatch;
+    }
+
+    return {
+      jobs,
+      pagination: {
+        pageCount: end === total ? currentPage : pageCount, // we only know when we're finished
+        range: { start, end },
+      },
+    };
+  }
+
   public getJobCounts(...jobStatuses: JobStatus[]): Promise<JobCounts> {
     return this.queue.getJobCounts(...jobStatuses) as unknown as Promise<JobCounts>;
   }

@@ -106,6 +106,7 @@
       "MINS_one": "{{count}} minute"
     },
     "JOBS_PER_PAGE": "Jobs per page (1-50)",
+    "COLLAPSE_SAME_NAME_JOBS": "Collapse jobs with the same name",
     "CONFIRM_QUEUE_ACTIONS": "Confirm queue actions",
     "CONFIRM_JOB_ACTIONS": "Confirm job actions",
     "COLLAPSE_JOB_DATA": "Collapse job data",

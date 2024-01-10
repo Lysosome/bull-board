@@ -12,6 +12,7 @@ import { useInterval } from './useInterval';
 import { useQuery } from './useQuery';
 import { useSelectedStatuses } from './useSelectedStatuses';
 import { useSettingsStore } from './useSettings';
+import { usePageMarkersStore } from './usePageMarkers';
 
 export type QueuesState = {
   queues: null | GetQueuesResponse['queues'];
@@ -31,13 +32,17 @@ export function useQueues(): Omit<QueuesState, 'updateQueues'> & { actions: Queu
   const api = useApi();
   const activeQueueName = useActiveQueueName();
   const selectedStatuses = useSelectedStatuses();
-  const { pollingInterval, jobsPerPage, confirmQueueActions } = useSettingsStore(
-    ({ pollingInterval, jobsPerPage, confirmQueueActions }) => ({
-      pollingInterval,
-      jobsPerPage,
-      confirmQueueActions,
-    })
-  );
+  const { pollingInterval, jobsPerPage, confirmQueueActions, collapseSameNameJobs } =
+    useSettingsStore(
+      ({ pollingInterval, jobsPerPage, confirmQueueActions, collapseSameNameJobs }) => ({
+        pollingInterval,
+        jobsPerPage,
+        confirmQueueActions,
+        collapseSameNameJobs,
+      })
+    );
+  const { pageMarkers } = usePageMarkersStore(({ pageMarkers }) => ({ pageMarkers }));
+  const page = query.get('page') || 1;
 
   const { queues, loading, updateQueues: setState } = useQueuesStore((state) => state);
   const { openConfirm } = useConfirm();
@@ -48,8 +53,10 @@ export function useQueues(): Omit<QueuesState, 'updateQueues'> & { actions: Queu
         .getQueues({
           activeQueue: activeQueueName || undefined,
           status: activeQueueName ? selectedStatuses[activeQueueName] : undefined,
-          page: query.get('page') || '1',
+          page: String(page),
+          after: (pageMarkers && pageMarkers[+page]) || undefined,
           jobsPerPage,
+          collapseSameNameJobs,
         })
         .then((data) => {
           setState(data.queues);

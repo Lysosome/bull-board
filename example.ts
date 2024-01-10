@@ -1,10 +1,8 @@
+/* eslint-disable no-console */
 import { ExpressAdapter } from '@lysosome/bull-board-express';
-import * as Bull from 'bull';
-import Queue3 from 'bull';
 import { Queue as QueueMQ, Worker } from 'bullmq';
 import express from 'express';
 import { createBullBoard } from './packages/api/src';
-import { BullAdapter } from './packages/api/src/queueAdapters/bull';
 import { BullMQAdapter } from './packages/api/src/queueAdapters/bullMQ';
 
 const redisOptions = {
@@ -15,32 +13,18 @@ const redisOptions = {
 
 const sleep = (t: number) => new Promise((resolve) => setTimeout(resolve, t * 1000));
 
-const createQueue3 = (name: string) => new Queue3(name, { redis: redisOptions });
 const createQueueMQ = (name: string) => new QueueMQ(name, { connection: redisOptions });
-
-function setupBullProcessor(bullQueue: Bull.Queue) {
-  bullQueue.process(async (job) => {
-    for (let i = 0; i <= 100; i++) {
-      await sleep(Math.random());
-      await job.progress(i);
-      await job.log(`Processing job at interval ${i}`);
-      if (Math.random() * 200 < 1) throw new Error(`Random error ${i}`);
-    }
-
-    return { jobId: `This is the return value of job (${job.id})` };
-  });
-}
 
 async function setupBullMQProcessor(queueName: string) {
   new Worker(
     queueName,
     async (job) => {
       for (let i = 0; i <= 100; i++) {
-        await sleep(Math.random());
+        await sleep(Math.random() / 10);
         await job.updateProgress(i);
         await job.log(`Processing job at interval ${i}`);
 
-        if (Math.random() * 200 < 1) throw new Error(`Random error ${i}`);
+        if (Math.random() * 500 < 1) throw new Error(`Random error ${i}`);
       }
 
       return { jobId: `This is the return value of job (${job.id})` };
@@ -52,10 +36,8 @@ async function setupBullMQProcessor(queueName: string) {
 const run = async () => {
   const app = express();
 
-  const exampleBull = createQueue3('ExampleBull');
   const exampleBullMq = createQueueMQ('ExampleBullMQ');
 
-  await setupBullProcessor(exampleBull); // needed only for example proposes
   await setupBullMQProcessor(exampleBullMq.name); // needed only for example proposes
 
   app.use('/add', (req, res) => {
@@ -69,8 +51,7 @@ const run = async () => {
       opts.priority = +opts.priority;
     }
 
-    exampleBull.add({ title: req.query.title }, opts);
-    exampleBullMq.add('Add', { title: req.query.title }, opts);
+    exampleBullMq.add(`${req.query.title}`, { title: req.query.title }, opts);
 
     res.json({
       ok: true,
@@ -81,7 +62,7 @@ const run = async () => {
   serverAdapter.setBasePath('/ui');
 
   createBullBoard({
-    queues: [new BullMQAdapter(exampleBullMq), new BullAdapter(exampleBull)],
+    queues: [new BullMQAdapter(exampleBullMq)],
     serverAdapter,
   });
 

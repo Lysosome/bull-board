@@ -23,6 +23,7 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
     collapseJobData,
     collapseJobOptions,
     collapseJobError,
+    collapseSameNameJobs,
     setSettings,
   } = useSettingsStore((state) => state);
   const { t } = useTranslation();
@@ -86,6 +87,12 @@ export const SettingsModal = ({ open, onClose }: SettingsModalProps) => {
         id="collapse-job-error"
         checked={collapseJobError}
         onCheckedChange={(checked) => setSettings({ collapseJobError: checked })}
+      />
+      <SwitchField
+        label={t('SETTINGS.COLLAPSE_SAME_NAME_JOBS')}
+        id="collapse-same-name-jobs"
+        checked={collapseSameNameJobs}
+        onCheckedChange={(checked) => setSettings({ collapseSameNameJobs: checked })}
       />
     </Modal>
   );

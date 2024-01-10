@@ -62,6 +62,8 @@ async function getAppQueues(
     pairs.map(async ([queueName, queue]) => {
       const isActiveQueue = decodeURIComponent(query.activeQueue) === queueName;
       const jobsPerPage = +query.jobsPerPage || 10;
+      const collapseSameNameJobs = query.collapseSameNameJobs === 'true';
+      const after = query.after ? +query.after : undefined;
 
       const jobStatuses = queue.getJobStatuses();
 
@@ -72,10 +74,29 @@ async function getAppQueues(
       const counts = await queue.getJobCounts(...jobStatuses);
       const isPaused = await queue.isPaused();
 
-      const pagination = getPagination(status, counts, currentPage, jobsPerPage);
-      const jobs = isActiveQueue
-        ? await queue.getJobs(status, pagination.range.start, pagination.range.end)
-        : [];
+      /*
+      job fetching strategy differs based on if collapseSameNameJobs is enabled or not
+      if collapseSameNameJobs is enabled, we fetch jobs until we have hit jobsPerPage where
+      each consecutive job has a unique name.
+      */
+      let jobs: QueueJob[] = [];
+      let pagination;
+      if (collapseSameNameJobs) {
+        const result = await queue.getCollapsedJobs(
+          status,
+          counts,
+          currentPage,
+          jobsPerPage,
+          after
+        );
+        jobs = result.jobs;
+        pagination = result.pagination;
+      } else {
+        pagination = getPagination(status, counts, currentPage, jobsPerPage);
+        jobs = isActiveQueue
+          ? await queue.getJobs(status, pagination.range.start, pagination.range.end)
+          : [];
+      }
 
       return {
         name: queueName,

@@ -50,7 +50,7 @@ export const QueuePage = () => {
         actions={
           <>
             <div>
-              {queue.jobs.length > 0 && !queue.readOnlyMode && (
+              {!queue.readOnlyMode && (
                 <QueueActions
                   queue={queue}
                   actions={actions}

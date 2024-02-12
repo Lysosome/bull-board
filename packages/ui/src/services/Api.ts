@@ -24,6 +24,7 @@ export class Api {
     after,
     jobsPerPage,
     collapseSameNameJobs,
+    filterJobName,
   }: {
     activeQueue?: string;
     status?: Status;
@@ -31,9 +32,18 @@ export class Api {
     after?: number;
     jobsPerPage: number;
     collapseSameNameJobs: boolean;
+    filterJobName?: string;
   }): Promise<GetQueuesResponse> {
     return this.axios.get(`/queues`, {
-      params: { activeQueue, status, page, after, jobsPerPage, collapseSameNameJobs },
+      params: {
+        activeQueue,
+        status,
+        page,
+        after,
+        jobsPerPage,
+        collapseSameNameJobs,
+        filterJobName,
+      },
     });
   }
 

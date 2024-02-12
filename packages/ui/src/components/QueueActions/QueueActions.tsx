@@ -13,6 +13,8 @@ import { PromoteIcon } from '../Icons/Promote';
 import { RetryIcon } from '../Icons/Retry';
 import { TrashIcon } from '../Icons/Trash';
 import s from './QueueActions.module.css';
+import JumpToTime from '../JumpToTime/JumpToTime';
+import FilterJobName from '../FilterJobName/FilterJobName';
 
 interface QueueActionProps {
   queue: AppQueue;
@@ -20,10 +22,6 @@ interface QueueActionProps {
   status: Status;
   allowRetries: boolean;
 }
-
-const ACTIONABLE_STATUSES = [STATUSES.failed, STATUSES.delayed, STATUSES.completed] as const;
-
-const isStatusActionable = (status: any): boolean => ACTIONABLE_STATUSES.includes(status);
 
 function isCleanAllStatus(status: any): status is JobCleanStatus {
   return [STATUSES.failed, STATUSES.delayed, STATUSES.completed].includes(status);
@@ -39,9 +37,6 @@ function isPromoteAllStatus(status: any): status is JobRetryStatus {
 
 export const QueueActions = ({ status, actions, queue, allowRetries }: QueueActionProps) => {
   const { t } = useTranslation();
-  if (!isStatusActionable(status)) {
-    return null;
-  }
 
   return (
     <ul className={s.queueActions}>
@@ -69,6 +64,16 @@ export const QueueActions = ({ status, actions, queue, allowRetries }: QueueActi
           </Button>
         </li>
       )}
+      {
+        <li>
+          <JumpToTime />
+        </li>
+      }
+      {
+        <li>
+          <FilterJobName />
+        </li>
+      }
     </ul>
   );
 };

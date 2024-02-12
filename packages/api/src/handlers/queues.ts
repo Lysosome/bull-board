@@ -34,7 +34,7 @@ export const formatJob = (job: QueueJob, queue: BaseAdapter): AppJob => {
   };
 };
 
-function getPagination(
+export function getPagination(
   statuses: JobStatus[],
   counts: JobCounts,
   currentPage: number,
@@ -63,6 +63,7 @@ async function getAppQueues(
       const isActiveQueue = decodeURIComponent(query.activeQueue) === queueName;
       const jobsPerPage = +query.jobsPerPage || 10;
       const collapseSameNameJobs = query.collapseSameNameJobs === 'true';
+      const filterJobName = query.filterJobName;
       const after = query.after ? +query.after : undefined;
 
       const jobStatuses = queue.getJobStatuses();
@@ -79,24 +80,15 @@ async function getAppQueues(
       if collapseSameNameJobs is enabled, we fetch jobs until we have hit jobsPerPage where
       each consecutive job has a unique name.
       */
-      let jobs: QueueJob[] = [];
-      let pagination;
-      if (collapseSameNameJobs) {
-        const result = await queue.getCollapsedJobs(
-          status,
-          counts,
-          currentPage,
-          jobsPerPage,
-          after
-        );
-        jobs = result.jobs;
-        pagination = result.pagination;
-      } else {
-        pagination = getPagination(status, counts, currentPage, jobsPerPage);
-        jobs = isActiveQueue
-          ? await queue.getJobs(status, pagination.range.start, pagination.range.end)
-          : [];
-      }
+      const { jobs, pagination } = await queue.getJobsCustom({
+        statuses: status,
+        counts,
+        currentPage,
+        jobsPerPage,
+        after,
+        collapseSameNameJobs,
+        filterJobName,
+      });
 
       return {
         name: queueName,
@@ -118,6 +110,8 @@ export async function queuesHandler({
   queues: bullBoardQueues,
   query = {},
 }: BullBoardRequest): Promise<ControllerHandlerReturnType> {
+  // eslint-disable-next-line no-console
+  console.log(`queuesHandler: ${JSON.stringify(query)}`);
   const pairs = [...bullBoardQueues.entries()];
 
   const queues = pairs.length > 0 ? await getAppQueues(pairs, query) : [];

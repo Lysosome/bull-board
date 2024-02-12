@@ -2,8 +2,8 @@
 
 Running and testing locally:
 
-1. `npm run start:dev` within root level dir. Make sure the redis server is running: `sudo service redis-server start`. Make sure you've run `yarn install` on all packages first. Also make sure that ports 3000 and 9000 are open. (Example backend runs on 3000, UI runs on 9000 at localhos:9000/ui).
-2. Once it's up and running, add jobs to the example queues with `curl http://localhost:3000/add?title=Example`
+1. `npm run start:dev` within root level dir. Make sure the redis server is running: `sudo service redis-server start`. Make sure you've run `yarn install` on all packages first. Also make sure that ports 3000 and 9000 are open. (Example backend runs on 3000, UI runs on 9000 at localhost:9000/ui).
+2. Once it's up and running, add jobs to the example queues with `curl http://localhost:3000/add?title=Example`, or `./spawnjobs.sh N` where N is the number of jobs you want to add.
 
 Publishing to NPM:
 

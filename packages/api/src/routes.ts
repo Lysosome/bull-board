@@ -13,6 +13,7 @@ import { resumeQueueHandler } from './handlers/resumeQueue';
 import { retryAllHandler } from './handlers/retryAll';
 import { retryJobHandler } from './handlers/retryJob';
 import { promoteAllHandler } from './handlers/promoteAll';
+import { getPageForDatetimeHandler } from './handlers/getPageForDatetime';
 
 export const appRoutes: AppRouteDefs = {
   entryPoint: {
@@ -23,6 +24,7 @@ export const appRoutes: AppRouteDefs = {
   api: [
     { method: 'get', route: '/api/redis/stats', handler: redisStatsHandler },
     { method: 'get', route: '/api/queues', handler: queuesHandler },
+    { method: 'get', route: '/api/queues/:queueName/datetime', handler: getPageForDatetimeHandler },
     {
       method: 'get',
       route: '/api/queues/:queueName/:jobId/logs',

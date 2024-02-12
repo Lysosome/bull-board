@@ -55,13 +55,30 @@ export abstract class BaseAdapter {
     end?: number
   ): Promise<QueueJob[]>;
 
-  public abstract getCollapsedJobs(
+  public abstract getPageForDatetime(
     jobStatuses: JobStatus[],
+    datetime: number,
     counts: JobCounts,
-    currentPage: number,
-    jobsPerPage: number,
-    after?: number
-  ): Promise<{
+    jobsPerPage: number
+  ): Promise<number>;
+
+  public abstract getJobsCustom({
+    statuses,
+    counts,
+    currentPage,
+    jobsPerPage,
+    after,
+    collapseSameNameJobs,
+    filterJobName,
+  }: {
+    statuses: JobStatus[];
+    counts: JobCounts;
+    currentPage: number;
+    jobsPerPage: number;
+    collapseSameNameJobs: boolean;
+    after?: number;
+    filterJobName?: string;
+  }): Promise<{
     jobs: QueueJob[];
     pagination: { pageCount: number; range: { start: number; end: number } };
   }>;

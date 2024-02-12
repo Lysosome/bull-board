@@ -64,6 +64,7 @@ async function getAppQueues(
       const jobsPerPage = +query.jobsPerPage || 10;
       const collapseSameNameJobs = query.collapseSameNameJobs === 'true';
       const filterJobName = query.filterJobName;
+      const beforeDatetime = query.beforeDatetime ? new Date(+query.beforeDatetime) : undefined;
       const after = query.after ? +query.after : undefined;
 
       const jobStatuses = queue.getJobStatuses();
@@ -88,6 +89,7 @@ async function getAppQueues(
         after,
         collapseSameNameJobs,
         filterJobName,
+        beforeDatetime,
       });
 
       return {

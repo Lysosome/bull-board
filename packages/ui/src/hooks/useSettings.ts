@@ -11,6 +11,7 @@ interface SettingsState {
   collapseJobOptions: boolean;
   collapseJobError: boolean;
   filterJobName: string | null;
+  beforeDatetime: number | null;
   setSettings: (settings: Partial<Omit<SettingsState, 'setSettings'>>) => void;
 }
 
@@ -26,6 +27,7 @@ export const useSettingsStore = create<SettingsState>()(
       collapseJobOptions: false,
       collapseJobError: false,
       filterJobName: null,
+      beforeDatetime: null,
       setSettings: (settings) => set(() => settings),
     }),
     {

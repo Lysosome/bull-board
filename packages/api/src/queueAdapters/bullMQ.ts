@@ -50,6 +50,7 @@ export class BullMQAdapter extends BaseAdapter {
     after,
     collapseSameNameJobs = false,
     filterJobName,
+    beforeDatetime,
   }: {
     statuses: JobStatus[];
     counts: JobCounts;
@@ -58,15 +59,29 @@ export class BullMQAdapter extends BaseAdapter {
     after?: number;
     collapseSameNameJobs: boolean;
     filterJobName?: string;
+    beforeDatetime?: Date;
   }): Promise<{
     jobs: Job[];
     pagination: { pageCount: number; range: { start: number; end: number } };
   }> {
+    // If there's a beforeDatetime and no after (meaning no pre-existing pagination),
+    // find where the first entry is taht satisfies the beforeDatetime and go from there
+    if (beforeDatetime) {
+      after = Math.max(
+        after || 0,
+        await this.getAfterForDatetime(statuses, beforeDatetime.getTime(), counts, jobsPerPage)
+      );
+    }
+
     // vanilla case: no special settings
     if (!collapseSameNameJobs && !filterJobName) {
       const pagination = getPagination(statuses, counts, currentPage, jobsPerPage);
       return {
-        jobs: await this.queue.getJobs(statuses, pagination.range.start, pagination.range.end),
+        jobs: await this.queue.getJobs(
+          statuses,
+          pagination.range.start + (after || 0),
+          pagination.range.end + (after || 0)
+        ),
         pagination,
       };
     }
@@ -90,11 +105,12 @@ export class BullMQAdapter extends BaseAdapter {
   }
 
   /*
-  Sometimes we want to jump to a specific page for a specific datetime, but we don't know the page
-  that would correspond to that datetime. This function will return the first page that would contain 
+  Sometimes we want to jump to a specific entry for a specific datetime, but we don't know the entry
+  that would correspond to that datetime. This function will return the first entry that would contain 
   a job with a timestamp equal to or less than the given datetime.
+  @return after value (index number when scanning jobs from most to least recent)
   */
-  public async getPageForDatetime(
+  public async getAfterForDatetime(
     statuses: JobStatus[],
     datetime: number,
     counts: JobCounts,
@@ -115,7 +131,7 @@ export class BullMQAdapter extends BaseAdapter {
       // check fetchedJobs for timestamp
       for (const [index, job] of fetchedJobs.entries()) {
         if (job.timestamp <= datetime) {
-          return Math.ceil((end + index + 1) / jobsPerPage);
+          return end + index;
         }
       }
       end += fetchedJobs.length;

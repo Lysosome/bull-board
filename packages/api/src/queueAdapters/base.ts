@@ -55,7 +55,7 @@ export abstract class BaseAdapter {
     end?: number
   ): Promise<QueueJob[]>;
 
-  public abstract getPageForDatetime(
+  public abstract getAfterForDatetime(
     jobStatuses: JobStatus[],
     datetime: number,
     counts: JobCounts,
@@ -70,6 +70,7 @@ export abstract class BaseAdapter {
     after,
     collapseSameNameJobs,
     filterJobName,
+    beforeDatetime,
   }: {
     statuses: JobStatus[];
     counts: JobCounts;
@@ -78,6 +79,7 @@ export abstract class BaseAdapter {
     collapseSameNameJobs: boolean;
     after?: number;
     filterJobName?: string;
+    beforeDatetime?: Date;
   }): Promise<{
     jobs: QueueJob[];
     pagination: { pageCount: number; range: { start: number; end: number } };

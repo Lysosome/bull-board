@@ -32,22 +32,30 @@ export function useQueues(): Omit<QueuesState, 'updateQueues'> & { actions: Queu
   const api = useApi();
   const activeQueueName = useActiveQueueName();
   const selectedStatuses = useSelectedStatuses();
-  const { pollingInterval, jobsPerPage, confirmQueueActions, collapseSameNameJobs, filterJobName } =
-    useSettingsStore(
-      ({
-        pollingInterval,
-        jobsPerPage,
-        confirmQueueActions,
-        collapseSameNameJobs,
-        filterJobName,
-      }) => ({
-        pollingInterval,
-        jobsPerPage,
-        confirmQueueActions,
-        collapseSameNameJobs,
-        filterJobName,
-      })
-    );
+  const {
+    pollingInterval,
+    jobsPerPage,
+    confirmQueueActions,
+    collapseSameNameJobs,
+    filterJobName,
+    beforeDatetime,
+  } = useSettingsStore(
+    ({
+      pollingInterval,
+      jobsPerPage,
+      confirmQueueActions,
+      collapseSameNameJobs,
+      filterJobName,
+      beforeDatetime,
+    }) => ({
+      pollingInterval,
+      jobsPerPage,
+      confirmQueueActions,
+      collapseSameNameJobs,
+      filterJobName,
+      beforeDatetime,
+    })
+  );
   const { pageMarkers } = usePageMarkersStore(({ pageMarkers }) => ({ pageMarkers }));
   const page = query.get('page') || 1;
 
@@ -65,13 +73,14 @@ export function useQueues(): Omit<QueuesState, 'updateQueues'> & { actions: Queu
           jobsPerPage,
           collapseSameNameJobs,
           filterJobName: filterJobName || undefined,
+          beforeDatetime: beforeDatetime || undefined,
         })
         .then((data) => {
           setState(data.queues);
         })
         // eslint-disable-next-line no-console
         .catch((error) => console.error('Failed to poll', error)),
-    [activeQueueName, jobsPerPage, selectedStatuses, filterJobName]
+    [activeQueueName, jobsPerPage, selectedStatuses, filterJobName, beforeDatetime]
   );
 
   const pollQueues = () =>

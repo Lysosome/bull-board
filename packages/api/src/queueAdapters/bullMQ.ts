@@ -32,8 +32,9 @@ export class BullMQAdapter extends BaseAdapter {
     return this.queue.getJob(id);
   }
 
+  // altered to filter out null jobs, in case we've deleted keys in Redis
   public getJobs(jobStatuses: JobStatus[], start?: number, end?: number): Promise<Job[]> {
-    return this.queue.getJobs(jobStatuses, start, end);
+    return this.queue.getJobs(jobStatuses, start, end).then((jobs) => jobs.filter((job) => !!job));
   }
 
   /*

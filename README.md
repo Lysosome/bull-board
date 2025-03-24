@@ -11,7 +11,7 @@ The correct order (dependency-wise) for the 3 packages is: first api, then ui, a
 
 1. Save all changes and run `npm run build` in the package root, ensuring that it builds without errors.
 2. Upgrade the version number in the package's `package.json`, also ensuring that its dependencies on other libraries (such as UI's dependency on API package) are also updated with the new number
-3. From CLI, in the package root dir, login to NPM with `npm login`, then run `npm publish`
+3. From CLI, in _each package root dir_ (not overall root dir `bull-board`), login to NPM with `npm login`, then run `npm publish`
 4. Make sure that any applications (i.e. Rivet monorepo) using these packages also update and run `yarn install` to get the changes.
 
 ---
